@@ -14,17 +14,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import calculation_contrast as C_C
-import calculation_articulation as C_A
 import calculation_exposure_evaluation as C_E_E
 
 from calculation_contrast import zoom_factor,\
                                  ROI_weight_5_area,\
                                  ROI_weight_9_area
-
-from configuration_color import list_contrast_operator,\
-                                list_articulation_operator,\
-                                list_exposure_evaluation_operator
-                                
+                             
 #==============================================================================
 #object to operate image
 #============================================================================== 
@@ -121,17 +116,11 @@ class frame:
                         list_contrast_9_areas.append(C_E_E.EntropyGray(this_area))
                     
                     #contrast
-                    elif operator in list_contrast_operator:
+                    else:
                         
                         #collect it
                         list_contrast_9_areas.append(C_C.GlobalContrast(this_area,operator))
-                        
-                    #articulation
-                    elif operator in list_articulation_operator:
-                    
-                        #collect it
-                        list_contrast_9_areas.append(C_A.Articulation(this_area,operator))
-                
+                           
                 #draw the bound of ROI
                 for k in range(ROI_linewidth):
                     
@@ -169,17 +158,11 @@ class frame:
                         list_contrast_5_areas.append(C_E_E.EntropyGray(this_area))
                     
                     #contrast
-                    elif operator in list_contrast_operator:
+                    else:
                         
                         #collect it
                         list_contrast_5_areas.append(C_C.GlobalContrast(this_area,operator))
-                        
-                    #articulation
-                    elif operator in list_articulation_operator:
-                    
-                        #collect it
-                        list_contrast_5_areas.append(C_A.Articulation(this_area,operator))
-                    
+
                 #draw the bound of ROI
                 for k in range(ROI_linewidth):
                     
@@ -214,17 +197,11 @@ class frame:
                         list_contrast_5_areas.append(C_E_E.EntropyGray(this_area))
                     
                     #contrast
-                    elif operator in list_contrast_operator:
+                    else:
                         
                         #collect it
                         list_contrast_5_areas.append(C_C.GlobalContrast(this_area,operator))
-                        
-                    #articulation
-                    elif operator in list_articulation_operator:
-                    
-                        #collect it
-                        list_contrast_5_areas.append(C_A.Articulation(this_area,operator))
-                        
+                                                
                 #draw the bound of ROI
                 for k in range(ROI_linewidth):
                     

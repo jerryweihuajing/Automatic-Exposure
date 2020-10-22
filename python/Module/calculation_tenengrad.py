@@ -14,20 +14,16 @@ import numpy as np
 
 #------------------------------------------------------------------------------
 """
-Calculation of articulation with different operator
+Calculation of gradient with different operator
 
 Args:
     img_gray: matrix of gray img
     articulation_operator: operator of articulation calculation
     
 Returns:
-    contrast value
+    gradient value
 """
-def Articulation(img_gray,articulation_operator):
-    
-    if articulation_operator=='Variance':
-        
-        return np.sqrt(np.average((img_gray.ravel()-np.average(img_gray.ravel()))**2))
+def Tenengrad(img_gray,articulation_operator):
     
     if articulation_operator=='Canny':
         
@@ -44,3 +40,20 @@ def Articulation(img_gray,articulation_operator):
     if articulation_operator=='Laplacian':
         
         return np.abs(np.average(cv2.Laplacian(img_gray, cv2.CV_64F).ravel()))
+    
+#------------------------------------------------------------------------------
+"""
+Calculation of articulation with different operator
+
+Args:
+    img_gray: matrix of gray img
+    articulation_operator: operator of articulation calculation
+    
+Returns:
+    articulation value
+"""
+def Articulation(img_gray,articulation_operator):
+    
+    if articulation_operator=='Variance':
+        
+        return np.sqrt(np.average((img_gray.ravel()-np.average(img_gray.ravel()))**2))

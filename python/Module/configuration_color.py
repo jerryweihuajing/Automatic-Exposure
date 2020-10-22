@@ -61,17 +61,15 @@ list_contrast_color=['tan',
                      'mediumaquamarine']
 
 #articulation
-list_articulation_operator=['Variance',
-                            'Canny',
-                            'Sobel-x',
-                            'Sobel-y',
-                            'Laplacian']
+list_tenengrad_operator=['Canny',
+                         'Sobel-x',
+                         'Sobel-y',
+                         'Laplacian']
 
-list_articulation_color=['plum',
-                         'bisque',
-                         'indigo',
-                         'magenta',
-                         'lightgreen']  
+list_tenengrad_color=['plum',
+                      'bisque',
+                      'indigo',
+                      'magenta']  
 
 #exposure evaluation
 list_exposure_evaluation_operator=['Entropy-RGB',
@@ -83,9 +81,9 @@ list_exposure_evaluation_color=['teal',
 #map between mode and color   
 map_contrast_color=dict(zip(list_contrast_operator,list_contrast_color)) 
 
-map_articulation_color=dict(zip(list_articulation_operator,list_articulation_color)) 
+map_tenengrad_color=dict(zip(list_tenengrad_operator,list_tenengrad_color)) 
 
 map_exposure_evaluation_color=dict(zip(list_exposure_evaluation_operator,list_exposure_evaluation_color)) 
 
-list_operator=list_contrast_operator+list_articulation_operator
-map_operator_color={**map_contrast_color,**map_articulation_color,**map_exposure_evaluation_color}
+list_operator=list_contrast_operator+list_tenengrad_operator
+map_operator_color={**map_contrast_color,**map_tenengrad_color,**map_exposure_evaluation_color}

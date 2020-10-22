@@ -33,5 +33,5 @@ import calculation_scene_discrimination as C_S_D
 import experiment_parameter as E_P
 import simulation_automatic_exposure as S_A_E
 
-from configuration_color import list_contrast_color,\
-                                list_articulation_operator
+from configuration_color import list_contrast_operator,\
+                                list_tenengrad_operator

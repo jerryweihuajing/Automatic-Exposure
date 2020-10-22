@@ -29,7 +29,7 @@ from configuration_font import legend_prop,\
 
 from configuration_color import map_operator_color,\
                                 list_contrast_operator,\
-                                list_articulation_operator,\
+                                list_tenengrad_operator,\
                                 list_exposure_evaluation_operator
 
 from calculation_contrast import zoom_factor,\
@@ -42,7 +42,7 @@ Plot animation field of FOV
 
 Args:
    imgs_folder: folder which contains a batch of images 
-   operator: operator of contrast or articulation calculation 
+   operator: operator of contrast or tenengrad calculation 
    ROI mode: definition method of ROI ['5-Area', 'Center']
    peak_search_method: method of peak search
    
@@ -169,9 +169,9 @@ def FOVAnimation(imgs_folder,operator,ROI_mode,peak_search_method):
         
             str_focus_value=operator+' Contrast'
             
-        if operator in list_articulation_operator:
+        if operator in list_tenengrad_operator:
             
-            str_focus_value=operator+' Articulation'
+            str_focus_value=operator+' Tenengrad'
            
         if operator in list_exposure_evaluation_operator:
             

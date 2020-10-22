@@ -16,11 +16,11 @@ import matplotlib.pyplot as plt
 
 from matplotlib.pyplot import MultipleLocator
 
-from configuration_color import list_articulation_operator
+from configuration_color import list_tenengrad_operator
 
 import operation_import as O_I
 
-import calculation_articulation as C_A
+import calculation_tenengrad as C_T
 import calculation_texture_feature as C_T_F
 import calculation_scene_discrimination as C_S_D
 
@@ -417,9 +417,9 @@ def GlobalContrast(img_gray,contrast_operator):
             return np.average((L/n).ravel())
         
     '''Articulation'''
-    if contrast_operator in list_articulation_operator:
+    if contrast_operator in list_tenengrad_operator:
         
-        return C_A.Articulation(img_gray,contrast_operator)
+        return C_T.Tenengrad(img_gray,contrast_operator)
             
 #------------------------------------------------------------------------------
 """

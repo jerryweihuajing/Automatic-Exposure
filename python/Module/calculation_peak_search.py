@@ -29,7 +29,7 @@ from configuration_font import legend_prop,\
                                 
 from configuration_color import map_operator_color,\
                                 list_contrast_operator,\
-                                list_articulation_operator,\
+                                list_tenengrad_operator,\
                                 list_exposure_evaluation_operator
 
 from calculation_contrast import zoom_factor,\
@@ -306,7 +306,7 @@ Plot input image as well as focused value curve
 
 Args:
    imgs_folder: folder which contains a batch of images 
-   operator: operator of contrast or articulation calculation 
+   operator: operator of contrast or tenengrad calculation 
    ROI mode: definition method of ROI ['5-Area', 'Center']
    peak_search_method: method of peak search
    
@@ -326,7 +326,7 @@ def PeakSearch(imgs_folder,operator,ROI_mode,peak_search_method):
     str_c,str_d=imgs_folder.split('Material')[-1].strip('\\').split('\\')
 
     #construct output folder
-    output_folder_operator=str_a+'\\Curve\\Scenario'+str_b
+    output_folder_operator=str_a+'\\AE Curve\\Scenario'+str_b
     
     try:
         
@@ -334,7 +334,7 @@ def PeakSearch(imgs_folder,operator,ROI_mode,peak_search_method):
     
     except:
         
-        output_folder_condition=str_a+'\\Curve\Operator'
+        output_folder_condition=str_a+'\\AE Curve\Operator'
     
     output_folder_operator+='\\'+operator+'\\'
     output_folder_condition+='\\'+operator+'\\'
@@ -437,9 +437,9 @@ def PeakSearch(imgs_folder,operator,ROI_mode,peak_search_method):
         
         str_focus_value=operator+' Contrast'
         
-    if operator in list_articulation_operator:
+    if operator in list_tenengrad_operator:
         
-        str_focus_value=operator+' Articulation'
+        str_focus_value=operator+' Tenengrad'
        
     if operator in list_exposure_evaluation_operator:
         
