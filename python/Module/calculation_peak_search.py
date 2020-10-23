@@ -6,7 +6,7 @@ Created on Thu Jan  9 17:00:27 2020
 @company: KAMERAWERK
 @e-mail: jerryweihuajing@126.com
 
-@title: Module-Search of contrast peak value
+@title: Module-Search of exposure evaluation peak value
 """
 
 import copy as cp
@@ -32,77 +32,21 @@ from configuration_color import map_operator_color,\
                                 list_tenengrad_operator,\
                                 list_exposure_evaluation_operator
 
-from calculation_contrast import zoom_factor,\
-                                 ROI_weight_5_area,\
-                                 ROI_weight_9_area
+from configuration_parameter import zoom_factor,\
+                                    ROI_weight_5_area,\
+                                    ROI_weight_9_area
 
 #------------------------------------------------------------------------------
 """
-Preprocessing in peak search to tolerate one fluctuation in ascending
+Calculation of peak value in exposure evaluation value coarsely
 
 Args:
-    list_contrast: contrast value list
-    
-Returns:
-    new contrast list after processing
-"""
-def PreProcessing(list_contrast):
-    
-    #final result
-    list_contrast_new=[list_contrast[0]]
-    
-    for k in range(1,len(list_contrast)-1):
-        
-        #replace the particular with the average
-        if list_contrast[k]<list_contrast[k-1]<list_contrast[k+1]:
-            
-            list_contrast_new.append(0.5*(list_contrast[k-1]+list_contrast[k+1]))
-        
-        else:
-            
-            list_contrast_new.append(list_contrast[k])
-            
-    return list_contrast_new+[list_contrast[-1]]
-
-#------------------------------------------------------------------------------
-"""
-Postprocessing in peak search to tolerate one fluctuation in ascending
-
-Args:
-    list_contrast: contrast value list
-    
-Returns:
-    new contrast list after processing
-"""
-def PostProcessing(list_contrast):
-
-    #final result
-    list_contrast_new=[list_contrast[0]]
-    
-    for k in range(1,len(list_contrast)-1):
-        
-        #replace the particular with the average
-        if list_contrast[k]>list_contrast[k-1]>list_contrast[k+1]:
-            
-            list_contrast_new.append(0.5*(list_contrast[k-1]+list_contrast[k+1]))
-        
-        else:
-            
-            list_contrast_new.append(list_contrast[k])
-            
-    return list_contrast_new+[list_contrast[-1]]
-
-#------------------------------------------------------------------------------
-"""
-Calculation of peak value in contrast value coarsely
-
-Args:
-    list_contrast: contrast value list
+    list_exposure_evaluation: exposure evaluation value list
     
 Returns:
     start index and end index for fine search
 """
-def JLSearch(list_contrast):
+def JLSearch(list_exposure_evaluation):
   
     #amount of consecutive ascending or descending points
     amount_revert=3
@@ -114,27 +58,22 @@ def JLSearch(list_contrast):
     index_a,index_b=None,None
     
     #index of maximum
-    index_maximum=list_contrast.index(np.max(list_contrast))
+    index_maximum=list_exposure_evaluation.index(np.max(list_exposure_evaluation))
 
-    # '''preprocessing: try to tolerate one fluctuation in ascending'''
-    # if len(list_contrast)>=3:
-        
-    #     list_contrast=PreProcessing(list_contrast)
-
-    for k in range(len(list_contrast)-1):
+    for k in range(len(list_exposure_evaluation)-1):
         
         '''ascending'''
-        if list_contrast[k]<list_contrast[k+1]:
+        if list_exposure_evaluation[k]<list_exposure_evaluation[k+1]:
             
             amount_ascending+=1
             amount_descending=0  
                     
-        if list_contrast[k]==list_contrast[k+1]:
+        if list_exposure_evaluation[k]==list_exposure_evaluation[k+1]:
         
             continue
         
         '''descending'''
-        if list_contrast[k]>list_contrast[k+1]:
+        if list_exposure_evaluation[k]>list_exposure_evaluation[k+1]:
             
             amount_descending+=1
             amount_ascending=0
@@ -149,11 +88,6 @@ def JLSearch(list_contrast):
             
             index_b=k-amount_descending+1
 
-        # ''''postprocessing: try to tolerate one fluctuation in descending'''
-        # if index_a!=None:
-
-        #     list_contrast=list_contrast[:index_a]+PostProcessing(list_contrast[index_a:])
-        
         if index_a!=None and index_b!=None:
     
             #expire the exception
@@ -168,23 +102,23 @@ def JLSearch(list_contrast):
 Calculation of peak value in global search
 
 Args:
-    list_contrast: contrast list
+    list_exposure_evaluation: exposure evaluation list
     step_frame: step of frame object (default: 1)
     
 Returns:
     list of frame index to be plotted
 """   
-def GlobalSearch(list_contrast,step_frame=1):
+def GlobalSearch(list_exposure_evaluation,step_frame=1):
 
     #final result
     list_index_plotted=[]
     
-    for k in range(len(list_contrast)):
+    for k in range(len(list_exposure_evaluation)):
         
         this_index=k*step_frame
         
         #out of bound
-        if this_index>=len(list_contrast):
+        if this_index>=len(list_exposure_evaluation):
             
             break
         
@@ -197,24 +131,24 @@ def GlobalSearch(list_contrast,step_frame=1):
 Calculation of peak value in coarse-to-fine search
 
 Args:
-    list_contrast: contrast list
+    list_exposure_evaluation: exposure evaluation list
     step_frame: step of frame object (default: 5)
     
 Returns:
     list of frame index to be plotted
 """   
-def Coarse2FineSearch(list_contrast,step_frame=5):
+def Coarse2FineSearch(list_exposure_evaluation,step_frame=5):
     
     #final result
     list_index_plotted=[]
     
     #collect frame coarsely
-    for k in range(len(list_contrast)):
+    for k in range(len(list_exposure_evaluation)):
         
         this_index=k*step_frame
         
         #out of bound
-        if this_index>=len(list_contrast):
+        if this_index>=len(list_exposure_evaluation):
             
             break
         
@@ -223,16 +157,16 @@ def Coarse2FineSearch(list_contrast,step_frame=5):
     step_fine=step_frame-1
     
     #start idx and end idx in fine search
-    start_idx_fine=list_contrast.index(np.max(list_contrast))-step_fine
-    end_idx_fine=list_contrast.index(np.max(list_contrast))+step_fine+1
+    start_idx_fine=list_exposure_evaluation.index(np.max(list_exposure_evaluation))-step_fine
+    end_idx_fine=list_exposure_evaluation.index(np.max(list_exposure_evaluation))+step_fine+1
     
     if start_idx_fine<0:
             
         start_idx_fine=0
             
-    if end_idx_fine>=len(list_contrast):
+    if end_idx_fine>=len(list_exposure_evaluation):
         
-        end_idx_fine=len(list_contrast)-1
+        end_idx_fine=len(list_exposure_evaluation)-1
     
     #collect frame finely
     for k in range(start_idx_fine,end_idx_fine):
@@ -246,13 +180,13 @@ def Coarse2FineSearch(list_contrast,step_frame=5):
 Calculation of peak value in binary search
 
 Args:
-    list_contrast: contrast list
+    list_exposure_evaluation: exposure evaluation list
     m: index of step
     
 Returns:
     list of frame index to be plotted
 """   
-def BinarySearch(list_contrast,m=6):
+def BinarySearch(list_exposure_evaluation,m=6):
 
     #final result
     list_index_plotted=[]
@@ -262,14 +196,14 @@ def BinarySearch(list_contrast,m=6):
     
     #init start index and end index
     start_idx_this_round=0
-    end_idx_this_round=int((len(list_contrast)//step_this_round)*step_this_round)
+    end_idx_this_round=int((len(list_exposure_evaluation)//step_this_round)*step_this_round)
     
     #loop
     while m_this_round:
         
         step_this_round=2**m_this_round
         
-        if step_this_round>len(list_contrast):
+        if step_this_round>len(list_exposure_evaluation):
             
             m_this_round-=1
             
@@ -279,16 +213,16 @@ def BinarySearch(list_contrast,m=6):
             
             start_idx_this_round=0
             
-        if end_idx_this_round>=len(list_contrast):
+        if end_idx_this_round>=len(list_exposure_evaluation):
             
-            end_idx_this_round=len(list_contrast)-1-step_this_round
+            end_idx_this_round=len(list_exposure_evaluation)-1-step_this_round
             
         #frame list for this iteration
         list_index_this_round=[k for k in range(start_idx_this_round, end_idx_this_round+step_this_round,step_this_round)]
         
-        list_contrast_this_round=[list_contrast[this_index] for this_index in list_index_this_round]
+        list_exposure_evaluation_this_round=[list_exposure_evaluation[this_index] for this_index in list_index_this_round]
         
-        peak_idx_this_round=list_contrast.index(np.max(list_contrast_this_round))
+        peak_idx_this_round=list_exposure_evaluation.index(np.max(list_exposure_evaluation_this_round))
         
         #redefine such parameters
         start_idx_this_round=int(peak_idx_this_round-1.5*step_this_round)
@@ -302,11 +236,11 @@ def BinarySearch(list_contrast,m=6):
 
 #------------------------------------------------------------------------------
 """
-Plot input image as well as focused value curve
+Plot input image as well as exposure evaluation curve
 
 Args:
    imgs_folder: folder which contains a batch of images 
-   operator: operator of contrast or tenengrad calculation 
+   operator: operator of exposure evaluation or tenengrad calculation 
    ROI mode: definition method of ROI ['5-Area', 'Center']
    peak_search_method: method of peak search
    
@@ -344,40 +278,42 @@ def PeakSearch(imgs_folder,operator,ROI_mode,peak_search_method):
     
     #frame object for coarse and fine search
     list_frame=O_I.FramesConstruction(imgs_folder,operator,ROI_mode)
-    list_contrast=[this_frame.exposure_evaluation for this_frame in list_frame]
-
+    list_exposure_evaluation=[this_frame.exposure_evaluation for this_frame in list_frame]
+    
     '''Global Search (Full Sweep)'''
     if peak_search_method=='Global':
         
-        list_index_plotted=GlobalSearch(list_contrast)
+        list_index_plotted=GlobalSearch(list_exposure_evaluation)
         abbr_method='GS'
         
     '''Coarse to Fine Search'''
     if peak_search_method=='Coarse2Fine':
         
-        list_index_plotted=Coarse2FineSearch(list_contrast)
+        list_index_plotted=Coarse2FineSearch(list_exposure_evaluation)
         abbr_method='C2F'
         
     '''Binary Search (Fibonacci)'''
     if peak_search_method=='Binary':
         
-        list_index_plotted=BinarySearch(list_contrast)
+        list_index_plotted=BinarySearch(list_exposure_evaluation)
         abbr_method='BS'
     
     list_frame_plotted=[list_frame[this_index] for this_index in list_index_plotted]
-    list_code_plotted=[this_frame.exposure_time for this_frame in list_frame_plotted]    
-    list_contrast_plotted=[this_frame.exposure_evaluation for this_frame in list_frame_plotted]
+    list_exposure_time_plotted=[this_frame.exposure_time for this_frame in list_frame_plotted]    
+    list_exposure_evaluation_plotted=[this_frame.exposure_evaluation for this_frame in list_frame_plotted]
+    list_average_luminance_plotted=[this_frame.average_luminance for this_frame in list_frame]
 
-    peak_index=list_contrast_plotted.index(np.max(list_contrast_plotted))
+    peak_index=list_exposure_evaluation_plotted.index(np.max(list_exposure_evaluation_plotted))
     
-    #normalization of code and contrast list
-    list_code_plotted=list(np.array(list_code_plotted)//1000)
-    list_normalized_contrast_plotted=C_N_A.Normalize(list_contrast_plotted)
-
+    #normalization of exposure time and exposure evaluation list
+    list_exposure_time_plotted=list(np.array(list_exposure_time_plotted)//1000)
+    list_normalized_exposure_evaluation_plotted=C_N_A.Normalize(list_exposure_evaluation_plotted)
+    list_normalized_average_luminance_plotted=C_N_A.Normalize(list_average_luminance_plotted)
+    
     plt.figure(figsize=(17,6))
     
     #tick step
-    x_major_step=(np.max(list_code_plotted)-np.min(list_code_plotted))//10
+    x_major_step=(np.max(list_exposure_time_plotted)-np.min(list_exposure_time_plotted))//10
     factor=10**(len(str(int(x_major_step)))-1)
     
     x_major_step=int(np.round(x_major_step/factor)*factor)
@@ -387,8 +323,8 @@ def PeakSearch(imgs_folder,operator,ROI_mode,peak_search_method):
     y_minor_step=0.05
     
     #limit of x and y
-    x_min,x_max=np.min(list_code_plotted)-x_major_step,\
-                np.max(list_code_plotted)+x_major_step
+    x_min,x_max=np.min(list_exposure_time_plotted)-x_major_step,\
+                np.max(list_exposure_time_plotted)+x_major_step
     y_min,y_max=0-.023*2,1+.023*2
     
     #text of parameter
@@ -411,32 +347,32 @@ def PeakSearch(imgs_folder,operator,ROI_mode,peak_search_method):
     '''input image and bound'''
     ax_input_image=plt.subplot(121)
     
-    peak_code=list_code_plotted[peak_index]
-    peak_normalized_contrast=list_normalized_contrast_plotted[peak_index]
+    peak_exposure_time=list_exposure_time_plotted[peak_index]
+    peak_normalized_exposure_evaluation=list_normalized_exposure_evaluation_plotted[peak_index]
     
     plt.imshow(list_frame_plotted[peak_index].img_gray,cmap='gray')
     plt.imshow(list_frame_plotted[peak_index].img_ROI,cmap='seismic_r') 
         
     print('')
-    print('---> Peak Exposure Time:',int(peak_code),'(ms)')
+    print('---> Peak Exposure Time:',int(peak_exposure_time),'(ms)')
     
     plt.title('Input Image',fontdict=title_prop)
     
     plt.xticks([])
     plt.yticks([])
     
-    '''contrast curve'''
-    ax_contrast_curve=plt.subplot(122)
+    '''exposure evaluation curve'''
+    ax_exposure_evaluation_curve=plt.subplot(122)
     
     #set ticks fonts
     plt.tick_params(labelsize=12)
-    labels=ax_contrast_curve.get_xticklabels()+ax_contrast_curve.get_yticklabels()
+    labels=ax_exposure_evaluation_curve.get_xticklabels()+ax_exposure_evaluation_curve.get_yticklabels()
     
     #label fonts
     [this_label.set_fontname('Times New Roman') for this_label in labels]
         
     plt.xlabel('Exposure Time(ms)',fontdict=label_prop)   
-    plt.ylabel('Evaluation Function',fontdict=label_prop)
+    plt.ylabel('Evaluation Evaluation',fontdict=label_prop)
     
     if operator in list_contrast_operator:
         
@@ -452,13 +388,23 @@ def PeakSearch(imgs_folder,operator,ROI_mode,peak_search_method):
         
     plt.title('Exposure Evaluation-Exposure Time Curve',fontdict=title_prop)
         
-    plt.plot(list_code_plotted,
-             list_normalized_contrast_plotted,
+    #exposure evaluation curve
+    plt.plot(list_exposure_time_plotted,
+             list_normalized_exposure_evaluation_plotted,
              color=map_operator_color[operator],
              marker='.',
              markersize=8,
              linestyle='-',
              label=str_focus_value)
+    
+    #everage luminance curve
+    plt.plot(list_exposure_time_plotted,
+             list_normalized_average_luminance_plotted,
+             color='gray',
+             marker='.',
+             markersize=8,
+             linestyle='-',
+             label='Average Luminance')
     
     plt.legend(prop=legend_prop,loc='lower right')
 
@@ -467,43 +413,43 @@ def PeakSearch(imgs_folder,operator,ROI_mode,peak_search_method):
     plt.ylim([y_min,y_max])
     
     #horizontal line
-    plt.hlines(peak_normalized_contrast,
+    plt.hlines(peak_normalized_exposure_evaluation,
                x_min,
                x_max,
                color='grey',
                linestyles="--")
     
     #vertical line
-    plt.vlines(peak_code,
+    plt.vlines(peak_exposure_time,
                y_min,
                y_max,
                color='grey',
                linestyles="--")
 
     #set locator
-    ax_contrast_curve.xaxis.set_major_locator(MultipleLocator(x_major_step))
-    ax_contrast_curve.xaxis.set_minor_locator(MultipleLocator(x_minor_step))
-    ax_contrast_curve.yaxis.set_major_locator(MultipleLocator(y_major_step))
-    ax_contrast_curve.yaxis.set_minor_locator(MultipleLocator(y_minor_step))
+    ax_exposure_evaluation_curve.xaxis.set_major_locator(MultipleLocator(x_major_step))
+    ax_exposure_evaluation_curve.xaxis.set_minor_locator(MultipleLocator(x_minor_step))
+    ax_exposure_evaluation_curve.yaxis.set_major_locator(MultipleLocator(y_major_step))
+    ax_exposure_evaluation_curve.yaxis.set_minor_locator(MultipleLocator(y_minor_step))
     
-    #annotation of peak VCM code
-    ax_contrast_curve.annotate('Peak: %d'%(peak_code),
-                               xy=(peak_code,peak_normalized_contrast),
-                               xytext=(peak_code+x_major_step/10,peak_normalized_contrast+y_major_step/10),
+    #annotation of peak exposure_time
+    ax_exposure_evaluation_curve.annotate('Peak: %d'%(peak_exposure_time),
+                               xy=(peak_exposure_time,peak_normalized_exposure_evaluation),
+                               xytext=(peak_exposure_time+x_major_step/10,peak_normalized_exposure_evaluation+y_major_step/10),
                                color='k',
                                fontproperties=sample_prop)
     
     #basic parameter                     
-    ax_contrast_curve.text(0+x_major_step/10,
-                           0+y_major_step/10,
-                           str_text,
-                           fontdict=annotation_prop) 
+    ax_exposure_evaluation_curve.text(0+x_major_step/10,
+                                      0+y_major_step/10,
+                                      str_text,
+                                      fontdict=annotation_prop) 
          
     #peak search parameter
-    ax_contrast_curve.text(0+x_major_step/10,
-                           1+y_major_step/10,
-                           'Method: %s Iters: %d'%(abbr_method,len(list_frame_plotted)),
-                           fontdict=text_prop) 
+    ax_exposure_evaluation_curve.text(0+x_major_step/10,
+                                      1+y_major_step/10,
+                                      'Method: %s Iters: %d'%(abbr_method,len(list_frame_plotted)),
+                                      fontdict=text_prop) 
     
     #save the fig
     '''operator experiment'''

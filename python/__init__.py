@@ -28,6 +28,7 @@ import calculation_histogram as C_H
 import calculation_peak_search as C_P_S
 import calculation_texture_feature as C_T_F
 import calculation_numerical_analysis as C_N_A
+import calculation_suitable_luminance as C_S_L
 import calculation_scene_discrimination as C_S_D
 
 import experiment_parameter as E_P

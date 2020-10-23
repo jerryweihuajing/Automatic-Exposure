@@ -16,9 +16,9 @@ import matplotlib.pyplot as plt
 import calculation_contrast as C_C
 import calculation_exposure_evaluation as C_E_E
 
-from calculation_contrast import zoom_factor,\
-                                 ROI_weight_5_area,\
-                                 ROI_weight_9_area
+from configuration_parameter import zoom_factor,\
+                                    ROI_weight_5_area,\
+                                        ROI_weight_9_area
                              
 #==============================================================================
 #object to operate image

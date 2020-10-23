@@ -32,9 +32,9 @@ from configuration_color import map_operator_color,\
                                 list_tenengrad_operator,\
                                 list_exposure_evaluation_operator
 
-from calculation_contrast import zoom_factor,\
-                                 ROI_weight_5_area,\
-                                 ROI_weight_9_area
+from configuration_parameter import zoom_factor,\
+                                    ROI_weight_5_area,\
+                                    ROI_weight_9_area
 
 #------------------------------------------------------------------------------
 """
