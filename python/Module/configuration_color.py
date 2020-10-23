@@ -62,6 +62,7 @@ list_contrast_color=['tan',
 
 #articulation
 list_tenengrad_operator=['Canny',
+                         'Sobel',
                          'Sobel-x',
                          'Sobel-y',
                          'Laplacian']
@@ -69,6 +70,7 @@ list_tenengrad_operator=['Canny',
 list_tenengrad_color=['plum',
                       'bisque',
                       'indigo',
+                      'sienna',
                       'magenta']  
 
 #exposure evaluation

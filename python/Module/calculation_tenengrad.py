@@ -23,21 +23,28 @@ Args:
 Returns:
     gradient value
 """
-def Tenengrad(img_gray,articulation_operator):
+def Tenengrad(img_gray,tenengrad_operator):
     
-    if articulation_operator=='Canny':
+    if tenengrad_operator=='Canny':
         
         return np.abs(np.average(cv2.Canny(img_gray,0,1000).ravel()))
 
-    if articulation_operator=='Sobel-x':
+    if tenengrad_operator=='Sobel':
+        
+        Sobel_x=cv2.Sobel(img_gray, cv2.CV_64F, 1, 0, ksize=5).ravel()
+        Sobel_y=cv2.Sobel(img_gray, cv2.CV_64F, 0, 1, ksize=5).ravel()
+        
+        return np.average(np.sqrt(Sobel_x**2+Sobel_y**2))
+        
+    if tenengrad_operator=='Sobel-x':
         
         return np.abs(np.average(cv2.Sobel(img_gray, cv2.CV_64F, 1, 0, ksize=5).ravel()))
     
-    if articulation_operator=='Sobel-y':
+    if tenengrad_operator=='Sobel-y':
     
         return np.abs(np.average(cv2.Sobel(img_gray, cv2.CV_64F, 0, 1, ksize=5).ravel()))
     
-    if articulation_operator=='Laplacian':
+    if tenengrad_operator=='Laplacian':
         
         return np.abs(np.average(cv2.Laplacian(img_gray, cv2.CV_64F).ravel()))
     

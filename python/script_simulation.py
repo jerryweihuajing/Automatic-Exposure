@@ -38,16 +38,14 @@ from __init__ import *
 
 #             this_imgs_folder=total_folder+'\\'+this_imgs_folder_name
 
-#             # C_P_S.PeakSearch(this_imgs_folder,'Boccignone',this_ROI_mode,this_peak_search_method)
-            
-#             S_A_F.LensAnimation(this_imgs_folder,'Boccignone',this_ROI_mode,this_peak_search_method)
-            # S_A_F.FOVAnimation(this_imgs_folder,'Boccignone',this_ROI_mode,this_peak_search_method)
+#             C_P_S.PeakSearch(AE_imgs_folder,this_operator,'9-Area','Global')
+#             S_A_E.FOVAnimation(AE_imgs_folder,this_operator,'9-Area','Global')
 
 AE_imgs_folder=r'C:\Users\ASUS\Desktop\Material\Exposure\A'
 
 for this_operator in list_tenengrad_operator:
     
-    C_P_S.PeakSearch(AE_imgs_folder,this_operator,'5-Area','Global')
+    C_P_S.PeakSearch(AE_imgs_folder,this_operator,'Center','Global')
     # S_A_E.FOVAnimation(AE_imgs_folder,this_operator,'9-Area','Global')
     
 # l=[1,2,3,4,5,6,7,8,9,8,7,6,5,4,3,2,1]

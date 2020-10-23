@@ -175,32 +175,32 @@ class frame:
             self.exposure_evaluation=np.sum(np.array(ROI_weight_5_area)*np.array(list_contrast_5_areas))
        
         if ROI_mode=='Center':
+       
+            i,j=height/2,width/2
             
-            for i,j in list_center_5_area[:1]:
-                        
-                if operator=='Entropy-RGB':
+            if operator=='Entropy-RGB':
+                
+                this_area=self.img_rgb[int(i)-area_half_height:int(i)+area_half_height,
+                                       int(j)-area_half_width:int(j)+area_half_width]
+                
+                #collect it
+                list_contrast_5_areas.append(C_E_E.EntropyRGB(this_area))
+                
+            else:
+                
+                this_area=self.img_gray[int(i)-area_half_height:int(i)+area_half_height,
+                                        int(j)-area_half_width:int(j)+area_half_width]
+                
+                if operator=='Entropy-Gray':
                     
-                    this_area=self.img_rgb[int(i)-area_half_height:int(i)+area_half_height,
-                                           int(j)-area_half_width:int(j)+area_half_width]
-                    
-                    #collect it
-                    list_contrast_5_areas.append(C_E_E.EntropyRGB(this_area))
-                    
+                    #calculate
+                    self.exposure_evaluation=C_E_E.EntropyGray(this_area)
+                
+                #contrast
                 else:
                     
-                    this_area=self.img_gray[int(i)-area_half_height:int(i)+area_half_height,
-                                            int(j)-area_half_width:int(j)+area_half_width]
-                    
-                    if operator=='Entropy-Gray':
-                        
-                        #collect it
-                        list_contrast_5_areas.append(C_E_E.EntropyGray(this_area))
-                    
-                    #contrast
-                    else:
-                        
-                        #collect it
-                        list_contrast_5_areas.append(C_C.GlobalContrast(this_area,operator))
+                    #calculate
+                    self.exposure_evaluation=C_C.GlobalContrast(this_area,operator)
                                                 
                 #draw the bound of ROI
                 for k in range(ROI_linewidth):
@@ -210,8 +210,5 @@ class frame:
                     self.img_ROI[int(i-k)-area_half_height:int(i+k+1)+area_half_height,int(j-k)-area_half_width]=1
                     self.img_ROI[int(i-k)-area_half_height:int(i+k+1)+area_half_height,int(j+k)+area_half_width]=1
     
-            #collect the data
-            self.exposure_evaluation=list_contrast_5_areas[0]
-            
         print('--> Exposure Time:',self.exposure_time//1000,'(ms)')
         # print('--> Exposure Evaluation:',self.exposure_evaluation)

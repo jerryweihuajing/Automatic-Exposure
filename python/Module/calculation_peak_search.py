@@ -376,15 +376,20 @@ def PeakSearch(imgs_folder,operator,ROI_mode,peak_search_method):
 
     plt.figure(figsize=(17,6))
     
-    #limit of x and y
-    x_min,x_max=np.min(list_code_plotted)-250,np.max(list_code_plotted)+250
-    y_min,y_max=0-.023*2,1+.023*2
-    
     #tick step
-    x_major_step=500
-    x_minor_step=250
+    x_major_step=(np.max(list_code_plotted)-np.min(list_code_plotted))//10
+    factor=10**(len(str(int(x_major_step)))-1)
+    
+    x_major_step=int(np.round(x_major_step/factor)*factor)
+    x_minor_step=x_major_step/2
+
     y_major_step=0.1
     y_minor_step=0.05
+    
+    #limit of x and y
+    x_min,x_max=np.min(list_code_plotted)-x_major_step,\
+                np.max(list_code_plotted)+x_major_step
+    y_min,y_max=0-.023*2,1+.023*2
     
     #text of parameter
     if ROI_mode=='5-Area':
