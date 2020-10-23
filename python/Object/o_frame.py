@@ -33,6 +33,7 @@ class frame:
                  img_ROI=None,
                  focus_value=None,
                  lens_position_code=None,
+                 average_luminance=None,
                  exposure_time=None,
                  exposure_evaluation=None):
         self.path=path
@@ -43,6 +44,7 @@ class frame:
         self.img_ROI=img_ROI
         self.focus_value=focus_value
         self.lens_position_code=lens_position_code
+        self.average_luminance=average_luminance
         self.exposure_time=exposure_time
         self.exposure_evaluation=exposure_evaluation
         
@@ -92,18 +94,23 @@ class frame:
         
         if ROI_mode=='9-Area':
             
-            #calculate contrast in each area
-            list_contrast_9_areas=[]
+            #calculate value in each area
+            list_value_9_areas=[]
+            list_luminance_9_areas=[]
             
             for i,j in list_center_9_area:
-                
+ 
                 if operator=='Entropy-RGB':
                     
                     this_area=self.img_rgb[int(i)-area_half_height:int(i)+area_half_height,
                                            int(j)-area_half_width:int(j)+area_half_width]
                     
                     #collect it
-                    list_contrast_9_areas.append(C_E_E.EntropyRGB(this_area))
+                    list_value_9_areas.append(C_E_E.EntropyRGB(this_area))
+                    
+                    #luminance
+                    this_area_average=this_area[:,:,0]+this_area[:,:,1]+this_area[:,:,2]
+                    list_luminance_9_areas.append(np.average(this_area_average.ravel())/3)
                     
                 else:
                     
@@ -113,14 +120,15 @@ class frame:
                     if operator=='Entropy-Gray':
                         
                         #collect it
-                        list_contrast_9_areas.append(C_E_E.EntropyGray(this_area))
+                        list_value_9_areas.append(C_E_E.EntropyGray(this_area))
                     
-                    #contrast
                     else:
                         
                         #collect it
-                        list_contrast_9_areas.append(C_C.GlobalContrast(this_area,operator))
-                           
+                        list_value_9_areas.append(C_C.GlobalContrast(this_area,operator))
+                    
+                    list_luminance_9_areas.append(np.average(this_area.ravel()))
+                    
                 #draw the bound of ROI
                 for k in range(ROI_linewidth):
                     
@@ -130,12 +138,14 @@ class frame:
                     self.img_ROI[int(i-k)-area_half_height:int(i+k+1)+area_half_height,int(j+k)+area_half_width]=1
             
             #collect the data
-            self.exposure_evaluation=np.sum(np.array(ROI_weight_9_area)*np.array(list_contrast_9_areas))
-       
+            self.exposure_evaluation=np.sum(np.array(ROI_weight_9_area)*np.array(list_value_9_areas))
+            self.average_luminance=np.sum(np.array(ROI_weight_9_area)*np.array(list_luminance_9_areas))
+            
         if ROI_mode=='5-Area':
             
-            #calculate contrast in each area
-            list_contrast_5_areas=[]
+            #calculate value in each area
+            list_value_5_areas=[]
+            list_luminance_5_areas=[]
             
             for i,j in list_center_5_area:
                         
@@ -145,7 +155,11 @@ class frame:
                                            int(j)-area_half_width:int(j)+area_half_width]
                     
                     #collect it
-                    list_contrast_5_areas.append(C_E_E.EntropyRGB(this_area))
+                    list_value_5_areas.append(C_E_E.EntropyRGB(this_area))
+                    
+                    #luminance
+                    this_area_average=this_area[:,:,0]+this_area[:,:,1]+this_area[:,:,2]
+                    list_luminance_5_areas.append(np.average(this_area_average.ravel())/3)
                     
                 else:
                     
@@ -155,14 +169,15 @@ class frame:
                     if operator=='Entropy-Gray':
                         
                         #collect it
-                        list_contrast_5_areas.append(C_E_E.EntropyGray(this_area))
-                    
-                    #contrast
+                        list_value_5_areas.append(C_E_E.EntropyGray(this_area))
+
                     else:
                         
                         #collect it
-                        list_contrast_5_areas.append(C_C.GlobalContrast(this_area,operator))
-
+                        list_value_5_areas.append(C_C.GlobalContrast(this_area,operator))
+                    
+                    list_luminance_5_areas.append(np.average(this_area.ravel()))
+                        
                 #draw the bound of ROI
                 for k in range(ROI_linewidth):
                     
@@ -172,8 +187,9 @@ class frame:
                     self.img_ROI[int(i-k)-area_half_height:int(i+k+1)+area_half_height,int(j+k)+area_half_width]=1
             
             #collect the data
-            self.exposure_evaluation=np.sum(np.array(ROI_weight_5_area)*np.array(list_contrast_5_areas))
-       
+            self.exposure_evaluation=np.sum(np.array(ROI_weight_5_area)*np.array(list_value_5_areas))
+            self.average_luminance=np.sum(np.array(ROI_weight_5_area)*np.array(list_luminance_5_areas))
+            
         if ROI_mode=='Center':
        
             i,j=height/2,width/2
@@ -184,8 +200,12 @@ class frame:
                                        int(j)-area_half_width:int(j)+area_half_width]
                 
                 #collect it
-                list_contrast_5_areas.append(C_E_E.EntropyRGB(this_area))
+                list_value_5_areas.append(C_E_E.EntropyRGB(this_area))
                 
+                #luminance
+                this_area_average=this_area[:,:,0]+this_area[:,:,1]+this_area[:,:,2]
+                self.average_luminance=np.average(this_area_average.ravel())/3
+                    
             else:
                 
                 this_area=self.img_gray[int(i)-area_half_height:int(i)+area_half_height,
@@ -196,11 +216,12 @@ class frame:
                     #calculate
                     self.exposure_evaluation=C_E_E.EntropyGray(this_area)
                 
-                #contrast
                 else:
                     
                     #calculate
                     self.exposure_evaluation=C_C.GlobalContrast(this_area,operator)
+                    
+                self.average_luminance=np.average(this_area.ravel())
                                                 
                 #draw the bound of ROI
                 for k in range(ROI_linewidth):
@@ -212,3 +233,4 @@ class frame:
     
         print('--> Exposure Time:',self.exposure_time//1000,'(ms)')
         # print('--> Exposure Evaluation:',self.exposure_evaluation)
+        # print('--> Average Luminance:',int(self.average_luminance))
