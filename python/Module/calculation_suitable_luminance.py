@@ -106,16 +106,11 @@ def SuitableLuminanceSearch(imgs_folder,ROI_mode):
     
     #variable in axis Y
     list_average_luminance_plotted=[this_frame.average_luminance for this_frame in list_frame_plotted]
-    
-    list_normalized_average_luminance_plotted=C_N_A.Normalize(list_average_luminance_plotted)
-    
-    #threshold to make sure the suitable frame for AE
-    luminance_threshold_normalized=luminance_threshold/256
-    
-    #get suitable frame
-    for k in range(len(list_normalized_average_luminance_plotted)):
 
-        if list_normalized_average_luminance_plotted[k]>luminance_threshold_normalized:
+    #get suitable frame
+    for k in range(len(list_average_luminance_plotted)):
+
+        if list_average_luminance_plotted[k]>luminance_threshold:
             
             peak_index=k
             
@@ -130,13 +125,13 @@ def SuitableLuminanceSearch(imgs_folder,ROI_mode):
     x_major_step=int(np.round(x_major_step/factor)*factor)
     x_minor_step=x_major_step/2
 
-    y_major_step=0.1
-    y_minor_step=0.05
+    y_major_step=32
+    y_minor_step=16
     
     #limit of x and y
     x_min,x_max=np.min(list_exposure_time_plotted)-x_major_step,\
                 np.max(list_exposure_time_plotted)+x_major_step
-    y_min,y_max=0-.023*2,1+.023*2
+    y_min,y_max=0-13,256+13
     
     #text of parameter
     if ROI_mode=='5-Area':
@@ -159,7 +154,7 @@ def SuitableLuminanceSearch(imgs_folder,ROI_mode):
     ax_input_image=plt.subplot(121)
     
     peak_exposure_time=list_exposure_time_plotted[peak_index]
-    peak_normalized_average_luminance=list_normalized_average_luminance_plotted[peak_index]
+    peak_average_luminance=list_average_luminance_plotted[peak_index]
     
     plt.imshow(list_frame[peak_index].img_gray,cmap='gray')
     plt.imshow(list_frame[peak_index].img_ROI,cmap='seismic_r') 
@@ -189,7 +184,7 @@ def SuitableLuminanceSearch(imgs_folder,ROI_mode):
         
     #everage luminance curve
     plt.plot(list_exposure_time_plotted,
-             list_normalized_average_luminance_plotted,
+             list_average_luminance_plotted,
              color='gray',
              marker='.',
              markersize=8,
@@ -203,7 +198,7 @@ def SuitableLuminanceSearch(imgs_folder,ROI_mode):
     plt.ylim([y_min,y_max])
     
     #horizontal line
-    plt.hlines(peak_normalized_average_luminance,
+    plt.hlines(peak_average_luminance,
                x_min,
                x_max,
                color='grey',
@@ -224,8 +219,8 @@ def SuitableLuminanceSearch(imgs_folder,ROI_mode):
     
     #annotation of peak exposure_time
     ax_exposure_evaluation_curve.annotate('Peak: %d'%(peak_exposure_time),
-                               xy=(peak_exposure_time,peak_normalized_average_luminance),
-                               xytext=(peak_exposure_time+x_major_step/10,peak_normalized_average_luminance+y_major_step/10),
+                               xy=(peak_exposure_time,peak_average_luminance),
+                               xytext=(peak_exposure_time+x_major_step/10,peak_average_luminance+y_major_step/10),
                                color='k',
                                fontproperties=sample_prop)
     
@@ -237,7 +232,7 @@ def SuitableLuminanceSearch(imgs_folder,ROI_mode):
          
     #peak search parameter
     ax_exposure_evaluation_curve.text(0+x_major_step/10,
-                                      1+y_major_step/10,
+                                      256+y_major_step/10,
                                       'Method: %s Iters: %d'%(abbr_method,len(list_frame)),
                                       fontdict=text_prop) 
     
