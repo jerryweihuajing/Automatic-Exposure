@@ -96,3 +96,4 @@ int main()
 
     cout << "Built with OpenCV " << CV_VERSION << endl;
 }
+ 
