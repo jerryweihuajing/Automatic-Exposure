@@ -75,10 +75,16 @@ list_tenengrad_color=['plum',
 
 #exposure evaluation
 list_exposure_evaluation_operator=['Entropy-RGB',
-                                   'Entropy-Gray']
+                                   'Entropy-Gray',
+                                   'Gradient',
+                                   'Gradient-x',
+                                   'Gradient-y']
 
 list_exposure_evaluation_color=['teal',
-                                'tomato']
+                                'aqua',
+                                'wheat',
+                                'tomato',
+                                'turquoise']
 
 #map between mode and color   
 map_contrast_color=dict(zip(list_contrast_operator,list_contrast_color)) 

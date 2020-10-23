@@ -106,7 +106,7 @@ def SuitableLuminanceSearch(imgs_folder,ROI_mode):
     
     #variable in axis Y
     list_average_luminance_plotted=[this_frame.average_luminance for this_frame in list_frame_plotted]
-
+    print(list_average_luminance_plotted)
     #get suitable frame
     for k in range(len(list_average_luminance_plotted)):
 

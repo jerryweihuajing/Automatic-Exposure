@@ -22,6 +22,7 @@ import operation_import as O_I
 
 import calculation_tenengrad as C_T
 import calculation_texture_feature as C_T_F
+import calculation_exposure_evaluation as C_E_E
 import calculation_scene_discrimination as C_S_D
 
 '''
@@ -407,10 +408,15 @@ def GlobalContrast(img_gray,contrast_operator):
                 
             return np.average((L/n).ravel())
         
-    '''Articulation'''
+    '''Tenengrad'''
     if contrast_operator in list_tenengrad_operator:
         
         return C_T.Tenengrad(img_gray,contrast_operator)
+    
+    '''Gradient'''
+    if 'Gradient' in contrast_operator:
+        
+        return C_E_E.Gradient(img_gray,contrast_operator)
             
 #------------------------------------------------------------------------------
 """

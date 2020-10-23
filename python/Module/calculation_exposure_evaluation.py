@@ -53,4 +53,32 @@ def EntropyGray(img_gray):
     list_log_frequency=np.log(list_frequency)
 
     return -np.sum(list_frequency*list_log_frequency)
+
+#------------------------------------------------------------------------------
+"""
+Calculation of tenengrad with different operator
+
+Args:
+    img_gray: matrix of gray img
+    articulation_operator: operator of articulation calculation
+    
+Returns:
+    tenengradient value
+"""
+def Gradient(img_gray,gradient_operator):
+    
+    if gradient_operator=='Gradient-x':
+        
+        return np.abs(np.average(np.gradient(img_gray,axis=1)))
+    
+    if gradient_operator=='Gradient-y':
+        
+        return np.abs(np.average(np.gradient(img_gray,axis=0)))
+    
+    if gradient_operator=='Gradient':
+        
+        Gradient_x=np.abs(np.average(np.gradient(img_gray,axis=1)))
+        Gradient_y=np.abs(np.average(np.gradient(img_gray,axis=0)))
+
+        return np.average(np.sqrt(Gradient_x**2+Gradient_y**2))
         

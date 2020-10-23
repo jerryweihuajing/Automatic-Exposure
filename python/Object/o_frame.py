@@ -136,7 +136,7 @@ class frame:
                     self.img_ROI[int(i+k)+area_half_height,int(j-k)-area_half_width:int(j+k+1)+area_half_width]=1
                     self.img_ROI[int(i-k)-area_half_height:int(i+k+1)+area_half_height,int(j-k)-area_half_width]=1
                     self.img_ROI[int(i-k)-area_half_height:int(i+k+1)+area_half_height,int(j+k)+area_half_width]=1
-            
+
             #collect the data
             self.exposure_evaluation=np.sum(np.array(ROI_weight_9_area)*np.array(list_value_9_areas))
             self.average_luminance=np.sum(np.array(ROI_weight_9_area)*np.array(list_luminance_9_areas))

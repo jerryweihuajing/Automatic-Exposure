@@ -279,7 +279,7 @@ def PeakSearch(imgs_folder,operator,ROI_mode,peak_search_method):
     #frame object for coarse and fine search
     list_frame=O_I.FramesConstruction(imgs_folder,operator,ROI_mode)
     list_exposure_evaluation=[this_frame.exposure_evaluation for this_frame in list_frame]
-    
+
     '''Global Search (Full Sweep)'''
     if peak_search_method=='Global':
         

@@ -20,4 +20,4 @@ ROI_weight_9_area.insert(4,0.2)
 zoom_factor=16
 
 #threshold of luminance to make sure AE frame
-luminance_threshold=160
+luminance_threshold=100
