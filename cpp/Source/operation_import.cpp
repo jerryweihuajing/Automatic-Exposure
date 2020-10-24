@@ -127,7 +127,7 @@ vector<frame> VectorFrame(string& folder_path) {
 
 	//vector if frame and VCM Code
 	vector<frame> vector_frame;
-	vector<int> vector_VCM_code;
+	vector<int> vector_exposure_time;
 
 	//generate matrix
 	for (int k = 0; k < vector_files_path.size(); k++) {
@@ -155,28 +155,28 @@ vector<frame> VectorFrame(string& folder_path) {
 
 			this_frame.img_gray = that_img_gray;
 			this_frame.img_bgr = that_img_bgr;
-			this_frame.lens_position_code = ImagePath2VCMCode(vector_files_path[k]);
+			this_frame.exposure_time = ImagePath2VCMCode(vector_files_path[k]);
 
 			clock_t launch = clock();
-			this_frame.focus_value= ContrastCenter(this_frame, "Boccignone");
+			this_frame.exposure_evaluation = ContrastCenter(this_frame, "Boccignone");
 			//this_frame.contrast = Contrast5Area(this_frame, "Boccignone");
 			clock_t finish = clock();
 			cout << "--> time consumed: " << 1000 * (double)(finish - launch) / CLOCKS_PER_SEC << " (ms)" << endl;
 
 			vector_frame.push_back(this_frame);
-			vector_VCM_code.push_back(this_frame.lens_position_code);
+			vector_exposure_time.push_back(this_frame.exposure_time);
 		}
 	}
 	//copy the VCM code vector
-	vector<int> original_vector_VCM_code= vector_VCM_code;
+	vector<int> original_vector_exposure_time = vector_exposure_time;
 	vector<int> vector_index_sorted;
 
 	//sort the VCM Code
-	sort(vector_VCM_code.begin(), vector_VCM_code.end());
+	sort(vector_exposure_time.begin(), vector_exposure_time.end());
 
-	for (int i = 0; i < vector_VCM_code.size(); i++) {
+	for (int i = 0; i < vector_exposure_time.size(); i++) {
 
-		vector_index_sorted.push_back(VectorIndex(original_vector_VCM_code, vector_VCM_code[i]));
+		vector_index_sorted.push_back(VectorIndex(original_vector_exposure_time, vector_exposure_time[i]));
 	}
 	return VectorFromIndex(vector_frame, vector_index_sorted);
 }

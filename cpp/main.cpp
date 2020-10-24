@@ -12,76 +12,10 @@
 
 #include "init.h"
 
-#include "Header\operation_array.h"
 #include "Header\operation_import.h"
-#include "Header\operation_vector.h"
-#include "Header\calculation_contrast.h"
-#include "Header\calculation_peak_search.h"
 
-vector<vector<int>> VectorROI9Area(Mat img_bgr) {
+#include "Header\calculation_exposure_evaluation.h"
 
-	//size of img
-	int height = img_bgr.rows;
-	int width = img_bgr.cols;
-
-	//construct img gray//
-	Mat img_gray(height, width, CV_8UC1);
-
-	//convert rgb image to gray level
-	cvtColor(img_bgr, img_gray, CV_BGR2GRAY);
-
-	//9-Area ROI vector
-	vector<vector<int>> vector_ROI;
-	
-	for (int i = -1; i <= 1; i++) {
-		
-		for (int j = -1; j <= 1; j++) {
-			
-			//cout << i << "," << j << endl;
-			//center index of ROI
-			int i_this_ROI = int(height / 2 + i * height / 4);
-			int j_this_ROI = int(width / 2 + j * width / 4);
-
-			int center_this_ROI[2] = { i_this_ROI ,j_this_ROI };
-
-			vector_ROI.push_back(VectorROI(img_gray, center_this_ROI));
-		}
-	}
-	return vector_ROI;
-}
-
-double WeightedAverageLuminance(Mat img_bgr) {
-
-	//vector of 9-Area ROI
-	vector<vector<int>> vector_ROI = VectorROI9Area(img_bgr);
-
-	//vector of 9-Area luminance
-	vector<double>vector_luminance;
-
-	for (int k = 0; k < vector_ROI.size(); k++) {
-		
-		vector_luminance.push_back(VectorAverage(vector_ROI[k]));
-		//cout << vector_luminance[k] << endl;
-	}
-	
-	//vector of 5-Area ROI weight
-	vector<double> vector_weight = { 0.1,0.1,0.1,0.1,0.2,0.1,0.1,0.1,0.1 };
-
-	return VectorMultiplication(vector_luminance, vector_weight);
-}
-bool Decision(frame frame_old, frame frame_now) {
-
-	//diff of luminance between old and new frame
-	double luminance_diff = 16;
-
-	if (abs(frame_old.average_luminance - frame_now.average_luminance) < luminance_diff) {
-		
-		cout << "==> AE: no need" << endl;
-		return false;
-	}
-	cout << "==> AE: needed" << endl;
-	return true;
-}
 int main()
 {	
 	cout << "Built with OpenCV " << CV_VERSION << endl;
@@ -95,25 +29,27 @@ int main()
 	
 	Decision(frame_old, frame_now);
 
-	//different frames at different exposure value
-	string imgs_path = "C:\\Users\\ASUS\\Desktop\\Material\\Exposure\\A";
+	VectorMatROI9Area(imread("dark.jpg"));
+	VectorMatROI5Area(imread("dark.jpg"));
+	MatROICenter(imread("dark.jpg"));
 
-	vector<frame> vector_frame = VectorFrame(imgs_path);
+	////different frames at different exposure value
+	//string imgs_path = "C:\\Users\\ASUS\\Desktop\\Material\\Exposure\\A";
 
-	//vector of code and contrast
-	vector<int> vector_code;
-	vector<double> vector_contrast;
+	//vector<frame> vector_frame = VectorFrame(imgs_path);
 
-	for (int k = 0; k < vector_frame.size(); k++) {
+	////vector of code and contrast
+	//vector<int> vector_code;
+	//vector<double> vector_contrast;
 
-		vector_code.push_back(vector_frame[k].lens_position_code);
-		vector_contrast.push_back(vector_frame[k].focus_value);
-	}
+	//for (int k = 0; k < vector_frame.size(); k++) {
 
-	cout << "" << endl;
-	cout << "-- Focused Lens Position Code: " << vector_frame[GlobalSearch(vector_contrast)].lens_position_code << endl;
+	//	vector_code.push_back(vector_frame[k].lens_position_code);
+	//	vector_contrast.push_back(vector_frame[k].focus_value);
+	//}
 
+	//cout << "" << endl;
+	//cout << "-- Focused Lens Position Code: " << vector_frame[GlobalSearch(vector_contrast)].lens_position_code << endl;
 
-    
 }
  
