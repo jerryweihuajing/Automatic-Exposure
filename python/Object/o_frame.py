@@ -13,12 +13,12 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-import calculation_contrast as C_C
 import calculation_exposure_evaluation as C_E_E
+import calculation_evaluation_function as C_E_F
 
 from configuration_parameter import zoom_factor,\
                                     ROI_weight_5_area,\
-                                        ROI_weight_9_area
+                                    ROI_weight_9_area
                              
 #==============================================================================
 #object to operate image
@@ -125,7 +125,7 @@ class frame:
                     else:
                         
                         #collect it
-                        list_value_9_areas.append(C_C.GlobalContrast(this_area,operator))
+                        list_value_9_areas.append(C_E_F.Evaluate(this_area,operator))
                     
                     list_luminance_9_areas.append(np.average(this_area.ravel()))
                     
@@ -174,7 +174,7 @@ class frame:
                     else:
                         
                         #collect it
-                        list_value_5_areas.append(C_C.GlobalContrast(this_area,operator))
+                        list_value_5_areas.append(C_E_F.Evaluate(this_area,operator))
                     
                     list_luminance_5_areas.append(np.average(this_area.ravel()))
                         
@@ -219,7 +219,7 @@ class frame:
                 else:
                     
                     #calculate
-                    self.exposure_evaluation=C_C.GlobalContrast(this_area,operator)
+                    self.exposure_evaluation=C_E_F.Evaluate(this_area,operator)
                     
                 self.average_luminance=np.average(this_area.ravel())
                                                 

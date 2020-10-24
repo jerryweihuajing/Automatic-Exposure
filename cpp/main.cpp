@@ -13,8 +13,10 @@
 #include "init.h"
 
 #include "Header\operation_array.h"
+#include "Header\operation_import.h"
 #include "Header\operation_vector.h"
 #include "Header\calculation_contrast.h"
+#include "Header\calculation_peak_search.h"
 
 vector<vector<int>> VectorROI9Area(Mat img_bgr) {
 
@@ -81,7 +83,9 @@ bool Decision(frame frame_old, frame frame_now) {
 	return true;
 }
 int main()
-{
+{	
+	cout << "Built with OpenCV " << CV_VERSION << endl;
+
 	frame frame_old, frame_now;
 
 	//give them attribute of luminance
@@ -92,8 +96,24 @@ int main()
 	Decision(frame_old, frame_now);
 
 	//different frames at different exposure value
-	vector<frame> vector_frame;
+	string imgs_path = "C:\\Users\\ASUS\\Desktop\\Material\\Exposure\\A";
 
-    cout << "Built with OpenCV " << CV_VERSION << endl;
+	vector<frame> vector_frame = VectorFrame(imgs_path);
+
+	//vector of code and contrast
+	vector<int> vector_code;
+	vector<double> vector_contrast;
+
+	for (int k = 0; k < vector_frame.size(); k++) {
+
+		vector_code.push_back(vector_frame[k].lens_position_code);
+		vector_contrast.push_back(vector_frame[k].focus_value);
+	}
+
+	cout << "" << endl;
+	cout << "-- Focused Lens Position Code: " << vector_frame[GlobalSearch(vector_contrast)].lens_position_code << endl;
+
+
+    
 }
  

@@ -81,4 +81,16 @@ def Gradient(img_gray,gradient_operator):
         Gradient_y=np.abs(np.average(np.gradient(img_gray,axis=0)))
 
         return np.average(np.sqrt(Gradient_x**2+Gradient_y**2))
+    
+    if gradient_operator=='Gradient-log':
+        
+        Gradient_x=np.abs(np.average(np.gradient(img_gray,axis=1)))
+        Gradient_y=np.abs(np.average(np.gradient(img_gray,axis=0)))
+
+        Gradient=np.average(np.sqrt(Gradient_x**2+Gradient_y**2))
+        
+        lamda=.05
+        sigma=3
+        
+        return np.average(np.log(lamda*(Gradient-sigma)+1))
         

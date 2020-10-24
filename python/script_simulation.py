@@ -41,14 +41,14 @@ from __init__ import *
 #             C_P_S.PeakSearch(AE_imgs_folder,this_operator,'9-Area','Global')
 #             S_A_E.FOVAnimation(AE_imgs_folder,this_operator,'9-Area','Global')
 
-AE_imgs_folder=r'C:\Users\ASUS\Desktop\Material\Exposure\C'
+AE_imgs_folder=r'C:\Users\ASUS\Desktop\Material\Exposure\A'
 
 # C_S_L.SuitableLuminanceSearch(AE_imgs_folder,'9-Area')
 # C_P_S.PeakSearch(AE_imgs_folder,'Laplacian','9-Area','Global')
 
-for this_operator in list_exposure_evaluation_operator:
+for this_operator in list_exposure_evaluation_operator[2:]:
     
-    C_P_S.PeakSearch(AE_imgs_folder,this_operator,'5-Area','Global')
+    C_P_S.PeakSearch(AE_imgs_folder,this_operator,'9-Area','Global')
     
     # S_A_E.FOVAnimation(AE_imgs_folder,this_operator,'9-Area','Global')
     

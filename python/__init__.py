@@ -36,4 +36,5 @@ import simulation_automatic_exposure as S_A_E
 
 from configuration_color import list_contrast_operator,\
                                 list_tenengrad_operator,\
+                                list_texture_feature_operator,\
                                 list_exposure_evaluation_operator
