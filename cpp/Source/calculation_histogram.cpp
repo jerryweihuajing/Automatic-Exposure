@@ -11,6 +11,7 @@ Created on Mon Oct 19 14:51:37 2020
 
 #include "..\Header\operation_array.h"
 #include "..\Header\operation_vector.h"
+
 #include "..\Header\calculation_histogram.h"
 
 //Flatten img matrix as a vector

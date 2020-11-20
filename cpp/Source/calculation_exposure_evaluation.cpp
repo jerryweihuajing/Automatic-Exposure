@@ -9,9 +9,8 @@ Created on Mon Oct 19 14:51:37 2020
 @title: Source-Calculation on Exposure Evaluation
 ******************************************************************************/
 
-#include "..\init.h"
-
 #include "..\Header\operation_vector.h"
+
 #include "..\Header\calculation_contrast.h"
 #include "..\Header\calculation_articulation.h"
 #include "..\Header\calculation_exposure_evaluation.h"
@@ -94,7 +93,7 @@ Mat MatROI(Mat img_gray, int center_ROI[2]) {
 	int half_width_ROI = int(width / 16);
 
 	return img_gray(Range(center_ROI[0] - half_height_ROI, center_ROI[0] + half_height_ROI),
-		Range(center_ROI[1] - half_width_ROI, center_ROI[1] + half_width_ROI));
+					Range(center_ROI[1] - half_width_ROI, center_ROI[1] + half_width_ROI));
 }
 Mat MatROICenter(Mat img_bgr) {
 
@@ -196,15 +195,18 @@ vector<Mat> VectorMatROI5Area(Mat img_bgr) {
 	}
 	return vector_ROI_Mat;
 }
-double Evaluate(Mat img_bgr, const string& operator) {
-	
-	if (operator == "Center") {
+double Evaluate(Mat img_bgr, const string& exposure_operator) {
 
-		return Articulation(MatROICenter(img_bgr), "Sobel");
+	//Mat object of ROI
+	Mat ROI = MatROICenter(img_bgr);
+
+	if (exposure_operator == "Center") {
+
+		return Articulation(ROI, "Sobel");
 	}
-	if (operator == "5-Area") {
+	if (exposure_operator == "5-Area") {
 
-		return Articulation(MatROICenter(img_bgr), "Sobel");
+		return Articulation(ROI, "Sobel");
 	}
 	return 0.0;
 }

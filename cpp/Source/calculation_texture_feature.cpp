@@ -10,6 +10,7 @@ Created on Mon Oct 19 14:51:37 2020
 ******************************************************************************/
 
 #include "..\Header\object_GLCM.h"
+
 #include "..\Header\calculation_texture_feature.h"
 
 //Calculate texture features depending on feature name

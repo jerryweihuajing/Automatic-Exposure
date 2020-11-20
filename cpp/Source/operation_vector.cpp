@@ -10,6 +10,7 @@ Created on Mon Oct 19 14:51:37 2020
 ******************************************************************************/
 
 #include "..\Header\object_frame.h"
+
 #include "..\Header\operation_array.h"
 #include "..\Header\operation_vector.h"
 
