@@ -25,18 +25,18 @@ int main()
 	frame frame_old, frame_now;
 
 	//give them attribute of luminance
-	frame_old.average_luminance = WeightedAverageLuminance(imread("dark.jpg"));
-	frame_now.average_luminance = WeightedAverageLuminance(imread("bright.jpg"));
-	//frame_old.average_luminance = WeightedAverageLuminance(imread("bright_blur.jpg"));
+	frame_old.average_luminance = WeightedAverageLuminance(imread("input/dark.jpg"));
+	frame_now.average_luminance = WeightedAverageLuminance(imread("input/bright.jpg"));
+	//frame_old.average_luminance = WeightedAverageLuminance(imread("input/bright_blur.jpg"));
 	
 	Decision(frame_old, frame_now);
 
-	VectorMatROI9Area(imread("dark.jpg"));
-	VectorMatROI5Area(imread("dark.jpg"));
-	MatROICenter(imread("dark.jpg"));
+	VectorMatROI9Area(imread("input/dark.jpg"));
+	VectorMatROI5Area(imread("input/dark.jpg"));
+	MatROICenter(imread("input/dark.jpg"));
 
 	////different frames at different exposure value
-	//string imgs_path = "C:\\Users\\ASUS\\Desktop\\Material\\Exposure\\A";
+	//string imgs_path = "C:/Users/ASUS/Desktop/Material/Exposure/A";
 
 	//vector<frame> vector_frame = VectorFrame(imgs_path);
 

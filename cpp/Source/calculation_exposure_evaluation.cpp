@@ -24,7 +24,7 @@ vector<vector<int>> VectorROI9Area(Mat img_bgr) {
 	//construct img gray//
 	Mat img_gray(height, width, CV_8UC1);
 
-	//convert rgb image to gray level
+	//convert rgb image to gray levela
 	cvtColor(img_bgr, img_gray, CV_BGR2GRAY);
 
 	//9-Area ROI vector
@@ -98,7 +98,7 @@ Mat MatROI(Mat img_gray, int center_ROI[2]) {
 Mat MatROICenter(Mat img_bgr) {
 
 	cout << "" << endl;
-	cout << "Mat ROI Center" << endl;
+	cout << "-- Mat ROI Center" << endl;
 
 	//size of img
 	int height = img_bgr.rows;
@@ -118,7 +118,7 @@ Mat MatROICenter(Mat img_bgr) {
 vector<Mat> VectorMatROI9Area(Mat img_bgr) {
 
 	cout << "" << endl;
-	cout << "Vector Mat ROI 9-Area" << endl;
+	cout << "-- Vector Mat ROI 9-Area" << endl;
 
 	//size of img
 	int height = img_bgr.rows;
@@ -137,7 +137,7 @@ vector<Mat> VectorMatROI9Area(Mat img_bgr) {
 
 		for (int j = -1; j <= 1; j++) {
 
-			cout << i << "," << j << endl;
+			//cout << i << "," << j << endl;
 
 			//center index of ROI
 			int i_this_ROI = int(height / 2 + i * height / 4);
@@ -153,7 +153,7 @@ vector<Mat> VectorMatROI9Area(Mat img_bgr) {
 vector<Mat> VectorMatROI5Area(Mat img_bgr) {
 
 	cout << "" << endl;
-	cout << "Vector Mat ROI 5-Area" << endl;
+	cout << "-- Vector Mat ROI 5-Area" << endl;
 
 	//size of img
 	int height = img_bgr.rows;
@@ -181,7 +181,7 @@ vector<Mat> VectorMatROI5Area(Mat img_bgr) {
 			}
 			else {
 
-				cout << i << "," << j << endl;
+				//cout << i << "," << j << endl;
 
 				//center index of ROI
 				int i_this_ROI = int(height / 2 + i * height / 4);
