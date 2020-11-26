@@ -6,7 +6,7 @@ Created on Mon Oct 19 14:51:37 2020
 @company: KAMERAWERK
 @e-mail: wei@kamerawerk.cn
 
-@title: script-Automatic Exposure
+@title: script-Automatic Exposure Simulation
 ******************************************************************************/
 
 // main.cpp: This file contains the "main" function.
@@ -25,15 +25,15 @@ int main()
 	frame frame_old, frame_now;
 
 	//give them attribute of luminance
-	frame_old.average_luminance = WeightedAverageLuminance(imread("input/dark.jpg"));
-	frame_now.average_luminance = WeightedAverageLuminance(imread("input/bright.jpg"));
-	//frame_old.average_luminance = WeightedAverageLuminance(imread("input/bright_blur.jpg"));
+	frame_old.average_luminance = WeightedAverageLuminance(imread("../Material/dark.jpg"));
+	frame_now.average_luminance = WeightedAverageLuminance(imread("../Material/bright.jpg"));
+	//frame_old.average_luminance = WeightedAverageLuminance(imread("../Material/bright_blur.jpg"));
 	
 	Decision(frame_old, frame_now);
 
-	VectorMatROI9Area(imread("input/dark.jpg"));
-	VectorMatROI5Area(imread("input/dark.jpg"));
-	MatROICenter(imread("input/dark.jpg"));
+	VectorMatROI9Area(imread("../Material/dark.jpg"));
+	VectorMatROI5Area(imread("../Material/dark.jpg"));
+	MatROICenter(imread("../Material/dark.jpg"));
 
 	////different frames at different exposure value
 	//string imgs_path = "C:/Users/ASUS/Desktop/Material/Exposure/A";
