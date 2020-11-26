@@ -1,7 +1,4 @@
 #post-fix
-#image
-*.png
-*.jpg
 
 #python
 *.pyc
